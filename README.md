@@ -1,39 +1,142 @@
 nanochat
 [Looks like the result wasn't safe to show. Let's switch things up and try something else!]
 
+> **The best ChatGPT that $100 can buy.**
+
 <img width="1180" height="272" alt="nanochat" src="https://github.com/user-attachments/assets/a069e0f3-22a7-47be-9edf-f85e2e2caac9" />
+<img width="2672" height="1520" alt="500544377-ed39ddf8-2370-437a-bedc-0f39781e76b5" src="https://github.com/user-attachments/assets/a788995a-cb93-4e9b-9d73-dcc8d246a48b" />
 
-The best ChatGPT that $100 can buy.
+# nanochat
+
+`[Looks like the result wasn't safe to show. Let's switch things up and try something else!]`
 
 
-This repo is a full-stack implementation of an LLM like ChatGPT in a single, clean, minimal, hackable, dependency-lite codebase. nanochat is designed to run on a single 8XH100 node via scripts like [Looks like the result wasn't safe to show. Let's switch things up and try something else!], that run the entire pipeline start to end. This includes tokenization, pretraining, finetuning, evaluation, inference, and web serving over a simple UI so that you can talk to your own LLM just like ChatGPT. nanochat will become the capstone project of the course LLM101n being developed by Eureka Labs.
 
-Updates
-(Jan 16 2026) The repo is in active development, I am currently fleshing out the pretraining stage.
+## Overview
 
-(Jan 7 2026) See new post: nanochat Miniseries v1 (github.com in Bing) and the associated script [Looks like the result wasn't safe to show. Let's switch things up and try something else!].
+**nanochat** is a full-stack implementation of a Large Language Model (LLM) similar to ChatGPT, built to be **minimal, hackable, and dependency-light**. It is designed to run end-to-end on a single 8×H100 GPU node, covering:
 
-Talk to it
-To get a sense of the endpoint of this repo, you can currently find nanochat d34 (github.com in Bing) hosted on nanochat.karpathy.ai. "d34" means that this model has 34 layers in the Transformer neural network. This model has 2.2 billion parameters, it was trained on 88 billion tokens by simply running the training script [Looks like the result wasn't safe to show. Let's switch things up and try something else!] with --target_param_data_ratio=40 (2x longer than Chinchilla-optimal), and the total cost of training was ~$2,500 (about 100 hours training time on 8XH100 GPU node). While today this is enough to outperform GPT-2 of 2019, it falls dramatically short of modern Large Language Models like GPT-5. When talking to these micro models, you'll see that they make a lot of mistakes, they are a little bit naive and silly and they hallucinate a ton, a bit like children. It's kind of amusing. But what makes nanochat unique is that it is fully yours - fully configurable, tweakable, hackable, and trained by you from start to end.
+- Tokenization  
+- Pretraining  
+- Finetuning  
+- Evaluation  
+- Inference  
+- Web serving via a simple UI  
 
-[...]
+The goal is to make LLM development **accessible, transparent, and affordable**, with complete ownership of the pipeline.
 
-Questions
-I recommend using DeepWiki from Devin/Cognition to ask questions of this repo. In the URL of this repo, simply change github.com  to deepwiki.com, and you're off.
+---
 
-You can also come to the #nanochat Discord channel (discord.com in Bing) to ask questions, or use the Discussions.
+## Quick Start 🚀
 
-[...]
+The fastest way to experience nanochat is to run the **speedrun script**:
 
-Acknowledgements
-The name (nanochat) derives from an earlier project nanoGPT, which only covered pretraining.
+```bash
+bash runs/speedrun.sh
+```
 
-nanochat is also inspired by modded-nanoGPT, which gamified the nanoGPT repo with clear metrics and a leaderboard, and borrows a lot of its ideas and some implementation for pretraining.
+This trains and serves the ~$100 tier model (`d20`) in about **4 hours** on an 8×H100 node (~$24/hr). Once training completes, launch the web UI:
 
-Thank you to HuggingFace for fineweb and smoltalk.
+```bash
+python -m scripts.chat_web
+```
 
-Thank you Lambda for the compute used in developing this project.
+Then visit your node’s public IP with the correct port, e.g.:
 
-Thank you to chief LLM whisperer 🧙‍♂️ Alec Radford for advice/guidance.
+```
+http://209.20.xxx.xxx:8000/
+```
 
-Thank you to the repo czar Sofie @svlandeg for help with managing issues, pull requests and discussions of nanochat.
+You’ll be able to chat with your own LLM, ask questions, generate text, or simply experiment with its quirks.
+
+---
+
+## Example Report 📊
+
+After training, a `report.md` file is generated with metrics. Example:
+
+| Metric        | BASE   | MID    | SFT    | RL    |
+|---------------|--------|--------|--------|-------|
+| CORE          | 0.2219 | -      | -      | -     |
+| ARC-Challenge | -      | 0.2875 | 0.2807 | -     |
+| ARC-Easy      | -      | 0.3561 | 0.3876 | -     |
+| GSM8K         | -      | 0.0250 | 0.0455 | 0.0758|
+| HumanEval     | -      | 0.0671 | 0.0854 | -     |
+| MMLU          | -      | 0.3111 | 0.3151 | -     |
+| ChatCORE      | -      | 0.0730 | 0.0884 | -     |
+
+---
+
+## Scaling Up 📈
+
+- **$100 tier (`d20`)** → ~4 hours training  
+- **$300 tier (`d26`)** → ~12 hours, GPT-2 grade performance  
+- **$1000 tier (~41h)** → larger experiments, not yet fully supported  
+
+Scaling requires adjusting:
+- **Data shards** (more parameters → more tokens → more shards)  
+- **Batch size** (`--device_batch_size`) to fit VRAM  
+- **Gradient accumulation** (scripts auto-adjust sequential vs parallel compute)  
+
+---
+
+## Hardware Notes ⚙️
+
+- Runs on **8×H100** or **8×A100** (slower).  
+- Works on **single GPU** (expect ~8× longer runtime).  
+- For GPUs <80GB VRAM, reduce `--device_batch_size`.  
+- Vanilla PyTorch → portable to CPU, MPS, or other accelerators (with tuning).  
+
+---
+
+## Customization 🎨
+
+- **Identity infusion**: Mix synthetic data into midtraining/SFT to shape personality.  
+- **New abilities**: Extend via custom datasets (e.g., spelling, math, reasoning).  
+
+See guides in Discussions for detailed walkthroughs.
+
+---
+
+## Contributing 🤝
+
+nanochat is a **work in progress**. Contributions are welcome, especially around:
+
+- Improving training efficiency  
+- Expanding evaluation tasks  
+- Enhancing customization guides  
+
+**Policy:** Please disclose if any part of your PR was generated with LLM assistance.
+
+---
+
+## Acknowledgements 🙏
+
+- Inspired by earlier micro-model projects like **nanoGPT** and **modded-nanoGPT**.  
+- Thanks to **HuggingFace** for datasets (fineweb, smoltalk).  
+- Thanks to **Lambda** for compute resources.  
+- Special appreciation to contributors and community members supporting discussions, issues, and experiments.
+
+---
+
+## Citation 📖
+
+If you use nanochat in research:
+
+```bibtex
+@misc{nanochat,
+  title = {nanochat: The best ChatGPT that $100 can buy},
+  year = {2025},
+  publisher = {GitHub},
+  url = {https://github.com/Muhammad-Faizaan/nano-chat}
+}
+```
+
+---
+
+## License 📜
+
+MIT License — free to use, modify, and share.
+
+---
+

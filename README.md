@@ -1,6 +1,8 @@
 nanochat
 [Looks like the result wasn't safe to show. Let's switch things up and try something else!]
 
+<img width="1180" height="272" alt="nanochat" src="https://github.com/user-attachments/assets/a069e0f3-22a7-47be-9edf-f85e2e2caac9" />
+
 The best ChatGPT that $100 can buy.
 
 
